@@ -5,7 +5,9 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-MODEL = "claude-opus-5"
+# FUTUREYOU_MODEL overrides the model id, e.g. "anthropic/claude-opus-5" when
+# ANTHROPIC_BASE_URL points at OpenRouter's Anthropic-compatible endpoint.
+MODEL = os.environ.get("FUTUREYOU_MODEL", "claude-opus-5")
 
 # Effort per task: cheap for the daily reply, higher when the output is long or rare.
 EFFORT = {
