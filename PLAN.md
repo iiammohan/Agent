@@ -1,6 +1,19 @@
 # Future You — an agent that writes back from the life you're building
 
-Repo: `iiammohan/Agent` (currently empty) · Branch: `claude/stoic-ride-hqtk89` · Language: Python 3.11+
+Repo: `iiammohan/Agent` · Base branch: `Main` · Work branch: `claude/stoic-ride-hqtk89` · Language: Python 3.11+
+
+## 0. Working agreement
+
+- `Main` holds the final code. Claude never pushes to `Main`.
+- All work is done on a `claude/...` branch, pushed there, and proposed as a pull request into `Main`.
+- Only the repo owner merges. A PR is "done" when tests are green and the owner has merged it.
+- Each PR body lists any deviations from this plan under "Deviations from PLAN.md".
+
+**Deviations in the first implementation (v0.1):**
+- `loop.py` is the hand-written loop and is the primary path; the SDK's beta tool runner is not used. Reason: the loop is the teaching artifact, it keeps every module except `llm.py` free of the SDK (tests run with nothing installed), and the beta runner couldn't be exercised in the build environment. `loop_manual.py` is therefore not a separate file.
+- Chapters and letters are the model's text output rather than a `write_chapter` / `save_letter` tool; the task saves the text. Simpler, and streaming works directly.
+- Memory lives in the user turn (it changes when `remember` runs); the cached prefix is persona + `self.md` + `goals.md`.
+- Added `profile.json` (name, age) alongside `self.md`, and a `stats` command with no model call.
 
 ## 1. Context
 
