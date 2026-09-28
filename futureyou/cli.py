@@ -27,6 +27,8 @@ def _parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="futureyou", description="One sentence a day, answered by the person you're becoming.")
     p.add_argument("--trace", action="store_true", help="show each tool call the agent makes")
     p.add_argument("--mock", action="store_true", help="use a scripted model (no API key needed)")
+    p.add_argument("--provider", choices=["anthropic", "openrouter"], help="which API to call (default: from environment)")
+    p.add_argument("--model", help="model id for the provider, e.g. claude-opus-5 or openai/gpt-5")
     sub = p.add_subparsers(dest="command")
 
     t = sub.add_parser("today", help="one sentence about today (default)")
@@ -90,7 +92,8 @@ def main(argv: list[str] | None = None) -> int:
         return 0 if export.delete_all(store) else 1
 
     try:
-        client = get_client(mock=args.mock, mock_responses=_mock_responses(command))
+        client = get_client(mock=args.mock, mock_responses=_mock_responses(command),
+                            provider=args.provider, model=args.model)
         if command == "today":
             from futureyou.tasks import today
             if not store.read_text("self.md").strip():

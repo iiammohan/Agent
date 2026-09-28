@@ -5,9 +5,11 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-# FUTUREYOU_MODEL overrides the model id, e.g. "anthropic/claude-opus-5" when
-# ANTHROPIC_BASE_URL points at OpenRouter's Anthropic-compatible endpoint.
-MODEL = os.environ.get("FUTUREYOU_MODEL", "claude-opus-5")
+# Provider is chosen at runtime (see llm.resolve_provider): anthropic or openrouter.
+# FUTUREYOU_MODEL overrides the model id for whichever provider is active.
+MODEL = os.environ.get("FUTUREYOU_MODEL", "claude-opus-5")                       # Anthropic direct
+OPENROUTER_MODEL = os.environ.get("FUTUREYOU_MODEL", "anthropic/claude-opus-5")  # any id OpenRouter lists
+OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
 # Effort per task: cheap for the daily reply, higher when the output is long or rare.
 EFFORT = {

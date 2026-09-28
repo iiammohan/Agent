@@ -35,7 +35,23 @@ No key yet? `futureyou --mock --trace today "the sky is clear today"` runs a scr
 
 **Billing note.** A Claude.ai or Claude Code subscription does not cover this; the app calls the API directly, which is metered per token on a Claude Developer Platform account (same email works). A daily run is a few cents; expect roughly a dollar a month on `claude-opus-5`, less on `claude-sonnet-5`. `ant auth login` works as an alternative to a static key.
 
-**OpenRouter.** OpenRouter exposes an Anthropic-compatible endpoint, so the same code works with an OpenRouter key: set `ANTHROPIC_BASE_URL=https://openrouter.ai/api`, `ANTHROPIC_API_KEY` to your OpenRouter key, and `FUTUREYOU_MODEL=anthropic/claude-opus-5` (their model ids are prefixed). Your entries then pass through OpenRouter as well as Anthropic, and the compatibility layer may not honour every field the app sends (adaptive thinking, effort, cache control); if the first run returns a 400, that's where to look.
+## Providers and models
+
+The app isn't tied to one model. `futureyou/llm.py` has two clients behind the same interface, and everything else is provider-neutral.
+
+| Provider | Set | Models |
+|---|---|---|
+| **Anthropic direct** | `ANTHROPIC_API_KEY` | `claude-opus-5` (default), `claude-sonnet-5`, ... |
+| **OpenRouter** | `OPENROUTER_API_KEY` | anything OpenRouter lists that supports tool calling: `anthropic/claude-opus-5`, `openai/gpt-5`, `google/gemini-2.5-pro`, `deepseek/deepseek-chat`, ... |
+
+If only one key is set, that provider is used. With both, Anthropic wins unless `FUTUREYOU_PROVIDER=openrouter`. Pick a model with `FUTUREYOU_MODEL=...` or per run:
+
+```bash
+futureyou --provider openrouter --model openai/gpt-5 today "sky is clear"
+futureyou --provider openrouter --model google/gemini-2.5-pro ask "should I take the job?"
+```
+
+Trying models against each other is a fair experiment: the prompts use tagged data blocks and a small tool set that any capable model handles, and the tests exercise the OpenRouter translation layer offline. Two things to know: the daily reply relies on tool calling (`search_entries`, `set_one_thing`), so a model without it will answer but won't log the one thing; and prompt caching and adaptive thinking are Anthropic-direct features, so cost per run is lowest there. On OpenRouter your entries pass through OpenRouter as well as the model's provider; for a private journal that's a conscious choice.
 
 ## Commands
 
