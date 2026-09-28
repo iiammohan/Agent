@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 tests/run_tests.py*)",
+      "Bash(python -m pytest*)",
+      "Bash(pytest*)",
+      "Bash(python3 -m futureyou*)",
+      "Bash(python -m futureyou*)",
+      "Bash(python3 tests/fixtures/make_sample.py)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git branch*)"
+    ],
+    "deny": [
+      "Bash(rm -rf*)",
+      "Bash(git push*Main*)",
+      "Bash(git push*main*)",
+      "Bash(curl*)",
+      "Bash(wget*)"
+    ]
+  }
+}
